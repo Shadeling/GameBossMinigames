@@ -46,16 +46,23 @@ public class ItemCell : MonoBehaviour
     public void UpdateCell()
     {
         number.text = IsEmpty ? String.Empty : CurrentPower.ToString();
+        number.color = number.color.SetAlpha(1);
 
-        if(ARGUETools.TryGetSprite("Cell_Number_" + CurrentPower, out var sprite))
+        if (ARGUETools.TryGetSprite("Cell_Number_" + CurrentPower, out var sprite))
         {
-            image.color.SetAlpha(1);
+            image.color = image.color.SetAlpha(1);
             image.sprite = sprite;
         }
         else
         {
-            image.color.SetAlpha(0);
+            image.color = image.color.SetAlpha(0);
         }
+    }
+
+    public void HideUI()
+    {
+        number.color = number.color.SetAlpha(0);
+        image.color = image.color.SetAlpha(0);
     }
 
     public void IncreaseValue()
@@ -75,15 +82,15 @@ public class ItemCell : MonoBehaviour
         CellAnimationController.Instance.SmoothTransition(this, otherCell, true);
 
         otherCell.IncreaseValue();
-        SetValue(X, Y, 0);
+        SetValue(X, Y, 0, false);
     }
 
     public void MoveToCell(ItemCell target)
     {
         CellAnimationController.Instance.SmoothTransition(this, target, false);
 
-        target.SetValue(target.X, target.Y, CurrentPower);
-        SetValue(X, Y, 0);
+        target.SetValue(target.X, target.Y, CurrentPower, false);
+        SetValue(X, Y, 0, false);
     }
 
     public void SetAnimation(CellAnimation animation)

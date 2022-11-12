@@ -15,7 +15,7 @@ public class CellAnimation : MonoBehaviour
     [SerializeField]
     private RectTransform rt;
 
-    private float moveTime = 0.1f;
+    private float moveTime = 0.2f;
     private float appearTime = 0.1f;
 
     private Sequence sequence;

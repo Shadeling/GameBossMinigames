@@ -34,13 +34,13 @@ public class CustomFieldSOEditor : Editor
 
         EditorGUILayout.Space(20);
 
-        for (int x = 0; x < field.sizeX; x++)
+        for (int y = 0; y < field.sizeY; y++)
         {
             EditorGUILayout.BeginHorizontal();
-            for (int y = 0; y < field.sizeY; y++)
+            for (int x = 0; x < field.sizeX; x++)
             {
                 //field.fieldState[x][y] = EditorGUILayout.Toggle(field.fieldState[x][y], GUILayout.Width(15));
-                field.fieldStateLinear[x+y*field.sizeX] = EditorGUILayout.Toggle(field.fieldStateLinear[x + y * field.sizeX], GUILayout.Width(15));
+                field.fieldStateLinear[x + y*field.sizeX] = EditorGUILayout.Toggle(field.fieldStateLinear[x + y * field.sizeX], GUILayout.Width(15));
             }
             EditorGUILayout.EndHorizontal();
         }

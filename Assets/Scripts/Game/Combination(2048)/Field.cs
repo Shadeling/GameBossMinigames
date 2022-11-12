@@ -70,10 +70,11 @@ public class Field : MonoBehaviour
 
     private void Move(Vector2 direction)
     {
-        int startXY = direction.x > 0 || direction.y< 0 ? -1 : 0;
         int dir = direction.x != 0 ? (int)direction.x : -(int)direction.y;
-        int sizeI = direction.x != 0 ? startfield.sizeX : startfield.sizeY;
-        int sizeJ = direction.x != 0 ? startfield.sizeY : startfield.sizeX;
+
+        int sizeJ = direction.x != 0 ? startfield.sizeX : startfield.sizeY;
+        int sizeI = direction.x != 0 ? startfield.sizeY : startfield.sizeX;
+        int startXY = direction.x > 0 || direction.y < 0 ? sizeJ-1 : 0;
 
         for (int i = 0; i < sizeI; i++)
         {
@@ -179,12 +180,13 @@ public class Field : MonoBehaviour
     {
         field = new ItemCell[startfield.sizeX, startfield.sizeY];
 
+
         float cellSizeX = fieldWidth / startfield.sizeX - spacing;
         float cellSizeY = fieldHeigth / startfield.sizeY - spacing;
         float cellSize = Mathf.Min(cellSizeX, cellSizeY);
 
-        float startX = -(fieldWidth / 4);
-        float startY = (fieldHeigth /2) - cellSize/2 + spacing;
+        float startX = -(fieldWidth / 2) + cellSize / 2 + spacing;
+        float startY = (fieldHeigth /2) - cellSize / 2 + spacing;
 
         for(int x=0; x < startfield.sizeX; x++)
         {

@@ -21,11 +21,14 @@ public class CellAnimationController : MonoBehaviour
 
     public void SmoothTransition(ItemCell from, ItemCell to, bool isMerging)
     {
+        to.HideUI();
+        from.HideUI();
         Instantiate(animPrefab, transform, false).Move(from, to, isMerging);
     }
 
     public void SmoothAppear(ItemCell cell)
     {
+        cell.HideUI();
         Instantiate(animPrefab, transform, false).Appear(cell);
     }
 }
