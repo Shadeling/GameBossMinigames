@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace MyGame
 {
-    public interface IArtifact : IVisualizable
+
+    public class Map
     {
 
     }
-
 }

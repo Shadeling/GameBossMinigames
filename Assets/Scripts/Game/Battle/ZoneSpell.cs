@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace MyGame
 {
-    public interface IArtifact : IVisualizable
+
+    /*public class ZoneSpell : ScriptableObject, ISpell
     {
 
-    }
+    }*/
 
 }

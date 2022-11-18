@@ -4,87 +4,92 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CellAnimation : MonoBehaviour
+namespace MyGame
 {
-    [SerializeField]
-    private Image image;
 
-    [SerializeField]
-    private Text number;
-
-    [SerializeField]
-    private RectTransform rt;
-
-    private float moveTime = 0.2f;
-    private float appearTime = 0.1f;
-
-    private Sequence sequence;
-
-    public void Move(ItemCell from, ItemCell to, bool isMerging)
+    public class CellAnimation : MonoBehaviour
     {
-        from.CancelAnimation();
-        to.SetAnimation(this);
+        [SerializeField]
+        private Image image;
 
-        CopyCellUI(from);
+        [SerializeField]
+        private Text number;
 
+        [SerializeField]
+        private RectTransform rt;
 
-        transform.position = from.transform.position;
-        rt.sizeDelta = from.RT.sizeDelta;
+        private float moveTime = 0.2f;
+        private float appearTime = 0.1f;
 
-        sequence = DOTween.Sequence();
-        sequence.Append(transform.DOMove(to.transform.position, moveTime).SetEase(Ease.InOutQuad));
+        private Sequence sequence;
 
-        if (isMerging)
+        public void Move(ItemCell from, ItemCell to, bool isMerging)
         {
+            from.CancelAnimation();
+            to.SetAnimation(this);
+
+            CopyCellUI(from);
+
+
+            transform.position = from.transform.position;
+            rt.sizeDelta = from.RT.sizeDelta;
+
+            sequence = DOTween.Sequence();
+            sequence.Append(transform.DOMove(to.transform.position, moveTime).SetEase(Ease.InOutQuad));
+
+            if (isMerging)
+            {
+                sequence.AppendCallback(() =>
+                {
+                    CopyCellUI(to);
+                });
+
+                sequence.Append(transform.DOScale(1.2f, appearTime));
+                sequence.Append(transform.DOScale(1f, appearTime));
+            }
+
             sequence.AppendCallback(() =>
             {
-                CopyCellUI(to);
+                to.UpdateCell();
+                Destroy();
             });
-
-            sequence.Append(transform.DOScale(1.2f, appearTime));
-            sequence.Append(transform.DOScale(1f, appearTime));
         }
 
-        sequence.AppendCallback(() =>
+        public void Appear(ItemCell cell)
         {
-            to.UpdateCell();
-            Destroy();
-        });
-    }
+            cell.CancelAnimation();
+            cell.SetAnimation(this);
 
-    public void Appear(ItemCell cell)
-    {
-        cell.CancelAnimation();
-        cell.SetAnimation(this);
+            CopyCellUI(cell);
 
-        CopyCellUI(cell);
+            transform.position = cell.transform.position;
+            rt.sizeDelta = cell.RT.sizeDelta;
+            transform.localScale = Vector3.zero;
 
-        transform.position = cell.transform.position;
-        rt.sizeDelta = cell.RT.sizeDelta;
-        transform.localScale = Vector3.zero;
+            sequence = DOTween.Sequence();
+            sequence.Append(transform.DOScale(1.2f, appearTime * 2));
+            sequence.Append(transform.DOScale(1f, appearTime * 2));
 
-        sequence = DOTween.Sequence();
-        sequence.Append(transform.DOScale(1.2f, appearTime * 2 ));
-        sequence.Append(transform.DOScale(1f, appearTime * 2));
+            sequence.AppendCallback(() =>
+            {
+                cell.UpdateCell();
+                Destroy();
+            });
+        }
 
-        sequence.AppendCallback(() =>
+        private void CopyCellUI(ItemCell cell)
         {
-            cell.UpdateCell();
-            Destroy();
-        });
+            image.sprite = cell.Image.sprite;
+            image.color.SetAlpha(cell.Image.color.a);
+            number.text = cell.CurrentPower.ToString();
+        }
+
+        public void Destroy()
+        {
+            sequence.Kill();
+            Destroy(gameObject);
+        }
+
     }
 
-    private void CopyCellUI(ItemCell cell)
-    {
-        image.sprite = cell.Image.sprite;
-        image.color.SetAlpha(cell.Image.color.a);
-        number.text = cell.CurrentPower.ToString();
-    }
-
-    public void Destroy()
-    {
-        sequence.Kill();
-        Destroy(gameObject);
-    }
-    
 }

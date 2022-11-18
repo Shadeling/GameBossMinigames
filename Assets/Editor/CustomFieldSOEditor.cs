@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEditor;
 
 
-[CustomEditor(typeof(CustomFieldSO))]
+[CustomEditor(typeof(ZoneSO))]
 [CanEditMultipleObjects]
 public class CustomFieldSOEditor : Editor
 {
-    CustomFieldSO field = null;
+    ZoneSO field = null;
 
     void OnEnable()
     {
-        field = (CustomFieldSO)target;
+        field = (ZoneSO)target;
     }
 
     public override void OnInspectorGUI()
