@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyGame.Utils;
 
 
 namespace MyGame
@@ -17,13 +18,20 @@ namespace MyGame
 
     public interface IUnit : IUnitStats
     {
+        public List<IBuff> Buffs { get; }
+
+        public bool IsAlive { get; }
+
         public bool EquipItem(BaseEquipment item);
         public bool RemoveItem(BaseEquipment item);
 
-
         public void TakeHit(float damage, DamageType type = DamageType.Pure);
 
+        public void Heal(float heal);
+
         public void ChangeStats(UnitStat stat, float value);
+
+        public float GetStat(UnitStat stat);
 
         public void ChangeResistance(DamageType damageType, float value);
 
@@ -33,16 +41,15 @@ namespace MyGame
 
     public interface IUnitStats : IVisualizable
     {
-        public List<ISpell> Spells { get; }
+        public List<SpellBase> Spells { get; }
 
-        public List<IPassive> Passives { get; }
-
-        public List<IBuff> Buffs { get; }
+        public List<PassiveBase> Passives { get; }
 
         public bool ControlledByPlayer { get; set; }
 
         public UnitClass UnitClass { get; }
 
         public List<BaseEquipment> Equipment { get; }
+
     }
 }

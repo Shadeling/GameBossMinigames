@@ -31,6 +31,8 @@ namespace MyGame
 
         public SpellStatWithMultiplier Cooldown { get; }
 
+        public int CurrentCooldown { get; }
+
 
         public abstract void OnCast(IUnit caster);
         public abstract void OnTargetAlly(List<IUnit> targets);

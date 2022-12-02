@@ -38,6 +38,14 @@ namespace XD
             return this;
         }
 
+        public Clamper AddToMax(float adds)
+        {
+            Current += adds;
+            Max += adds;
+
+            return this;
+        }
+
         public Clamper Multiply(Clamper multiplier)
         {
             Min *= multiplier.Min;

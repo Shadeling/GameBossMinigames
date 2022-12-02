@@ -32,24 +32,22 @@ namespace MyGame
         public UnitClass UnitClass => unitClass;
 
         [SerializeField]
-        private List<ISpell> baseSpells;
-        public List<ISpell> Spells => baseSpells;
+        private List<SpellBase> baseSpells;
+        public List<SpellBase> Spells => baseSpells;
 
         [SerializeField]
-        private List<IPassive> basePassives;
-        public List<IPassive> Passives => basePassives;
+        private List<PassiveBase> basePassives;
+        public List<PassiveBase> Passives => basePassives;
 
         [SerializeField]
         private List<BaseEquipment> startEquipment;
         public List<BaseEquipment> Equipment => startEquipment;
 
         [SerializeField]
-        private List<StatValue> stats;
+        public List<StatValue> stats;
 
         [SerializeField]
-        private List<ResistanceValue> resistances;
-
-        public List<IBuff> Buffs => new List<IBuff>();
+        public List<ResistanceValue> resistances;
 
     }
 

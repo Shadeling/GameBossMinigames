@@ -31,6 +31,7 @@ namespace MyGame
     [Serializable]
     public struct StatValue
     {
+        public string Name;
         public UnitStat stat;
         public float value;
     }
@@ -38,6 +39,7 @@ namespace MyGame
     [Serializable]
     public struct ResistanceValue
     {
+        public string Name;
         public DamageType resistanceType;
         public float change;
     }

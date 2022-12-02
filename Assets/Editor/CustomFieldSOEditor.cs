@@ -9,10 +9,12 @@ using UnityEditor;
 public class CustomFieldSOEditor : Editor
 {
     ZoneSO field = null;
+    bool isSpell = false;
 
     void OnEnable()
     {
         field = (ZoneSO)target;
+        isSpell = field.startPoint != Vector2Int.zero;
     }
 
     public override void OnInspectorGUI()
@@ -56,6 +58,32 @@ public class CustomFieldSOEditor : Editor
         {
             ResetField(true, false);
         }
+
+        EditorGUILayout.Space(20);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Если это способность", GUILayout.Width(150));
+        isSpell = EditorGUILayout.Toggle(isSpell);
+        EditorGUILayout.EndHorizontal();
+
+        if (isSpell)
+        {
+            EditorGUILayout.LabelField("Точка отсчета для способностей");
+            for (int y = 0; y < field.sizeY; y++)
+            {
+                EditorGUILayout.BeginHorizontal();
+                for (int x = 0; x < field.sizeX; x++)
+                {
+                    bool equals = field.startPoint.x == x && field.startPoint.y == y;
+
+                    if (EditorGUILayout.Toggle(equals, GUILayout.Width(15)))
+                    {
+                        field.startPoint.Set(x, y);
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
 
         if (GUI.changed)
         {

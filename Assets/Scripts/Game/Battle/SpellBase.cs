@@ -19,6 +19,8 @@ namespace MyGame
 
         public SpellStatWithMultiplier Cooldown => throw new System.NotImplementedException();
 
+        public int CurrentCooldown => throw new System.NotImplementedException();
+
         public virtual void OnCast(IUnit caster)
         {
             throw new System.NotImplementedException();

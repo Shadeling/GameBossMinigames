@@ -12,9 +12,9 @@ public class ZoneSO : ScriptableObject
     [SerializeField]
     public int sizeY = 1;
 
-    /*[SerializeField]
-    public List<List<bool>> fieldState;*/
-
     [SerializeField]
     public List<bool> fieldStateLinear;
+
+    [SerializeField]
+    public Vector2Int startPoint;
 }

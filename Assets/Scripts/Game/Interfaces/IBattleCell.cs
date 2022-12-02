@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+
+using MyGame.Utils;
 using UnityEngine;
 
 namespace MyGame
@@ -13,12 +13,13 @@ namespace MyGame
         River = 3,
     }
 
-    public interface IBattleCell
+    public interface IBattleCell : ISelectable
     {
         CellType CellType { get; set; }
 
         IUnit MyUnit { get; set; }
 
+        Vector2Int Position { get; set; }
 
         public void ApplyEffect(IUnit unit);
     }
