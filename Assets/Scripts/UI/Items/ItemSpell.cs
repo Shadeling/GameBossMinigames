@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSpell : MonoBehaviour
+namespace MyGame.UI
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class ItemSpell : PSYController
     {
-        
+        private ISpell spell;
+
+        protected override void OnSetup(PSYParams param)
+        {
+            spell = param.Get<ISpell>();
+
+            
+        }
+
+
+        protected override void OnChildClick(PSYViewEventArgs e)
+        {
+            PSYGUI.Event(PSYEvent.SpellClicked, PSYParams.New(spell));
+        }
     }
 }

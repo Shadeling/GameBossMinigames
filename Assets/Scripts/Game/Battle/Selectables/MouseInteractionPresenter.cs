@@ -12,12 +12,11 @@ namespace MyGame.Utils
     public sealed class MouseInteractionPresenter : MonoBehaviour
     {
         [SerializeField] private Camera _camera;
-        [SerializeField] private SelectableValue _selectedObjectLeft;
-        [SerializeField] private SelectableValue _selectedObjectRight;
+        
         [SerializeField] private EventSystem _eventSystem;
         [SerializeField] private GraphicRaycaster raycaster;
 
-        [Inject]
+        [Inject] StateHolder State;
 
         private void Awake()
         {
@@ -84,7 +83,7 @@ namespace MyGame.Utils
             {
                 if (WeHit<ISelectable>(hits, out var selectable))
                 {
-                    _selectedObjectLeft.SetValue(selectable);
+                    State.CurrentSelected.SetValue(selectable);
                 }
             });
 
@@ -92,7 +91,7 @@ namespace MyGame.Utils
             {
                 if (WeHit<ISelectable>(hits, out var selectable))
                 {
-                    _selectedObjectRight.SetValue(selectable);
+                    State.CurrentClicked.SetValue(selectable);
                 }
             });
 

@@ -1,18 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
-public class WndSpellSelection : MonoBehaviour
+namespace MyGame.UI
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class WndSpellSelection : ARController
     {
-        
+        [Inject] StateHolder state;
+
+        protected override void Init()
+        {
+
+        }
+
+        protected override void OnSetup(PSYParams param)
+        {
+
+        }
+
+        public override void PSYEventHandler(PSYEvent e, PSYParams param)
+        {
+
+        }
+
     }
 }

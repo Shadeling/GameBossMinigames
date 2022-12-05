@@ -12,4 +12,6 @@
     SoundRequestUI = 3,
     WindowInited = 4,
     CeaseUI = 5,
+
+    SpellClicked = 6,
 }

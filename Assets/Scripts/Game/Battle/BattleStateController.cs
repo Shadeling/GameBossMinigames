@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Utils;
+using Zenject;
 
 namespace MyGame
 {
 
     public class BattleStateController : MonoBehaviour
     {
-        [SerializeField] SelectableValue currentSelected;
-        [SerializeField] SelectableValue currentClicked;
-        [SerializeField] CurrentStateValue stateValue;
+        [Inject] StateHolder State;
 
         [SerializeField] UnitTemplate unitTemplate;
 
@@ -37,16 +36,16 @@ namespace MyGame
 
                 if(selectedCell == null)
                 {
-                    stateValue.SetValue(CurrentState.None);
+                    State.StateValue.SetValue(CurrentState.None);
                 }
                 if (selectedCell != null)
                 {
                     selectedCell.Select(true);
 
                     if (selectedCell.HasUnit)
-                        stateValue.SetValue(CurrentState.SelectCellWithUnit);
+                        State.StateValue.SetValue(CurrentState.SelectCellWithUnit);
                     else
-                        stateValue.SetValue(CurrentState.SelectCellWithoutUnit);
+                        State.StateValue.SetValue(CurrentState.SelectCellWithoutUnit);
                 }
             }
         }
@@ -59,8 +58,8 @@ namespace MyGame
                 CellsGrid.Add(cell.Position, cell);
             }
 
-            currentSelected.OnNewValue += OnSelected;
-            currentClicked.OnNewValue += OnClicked;
+            State.CurrentSelected.OnNewValue += OnSelected;
+            State.CurrentClicked.OnNewValue += OnClicked;
 
 
             BaseUnit baseUnit = new BaseUnit(unitTemplate); 
@@ -94,7 +93,7 @@ namespace MyGame
             BattleCell clickedCell = selectable as BattleCell;
             if (clickedCell)
             {
-                switch (stateValue.CurrentValue)
+                switch (State.StateValue.CurrentValue)
                 {
                     case CurrentState.None:
                         break;
