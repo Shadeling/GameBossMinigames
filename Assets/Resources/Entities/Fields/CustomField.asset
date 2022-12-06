@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7832462ac20b75489520d32b58b1975, type: 3}
-  m_Name: Field4x4
+  m_Script: {fileID: 11500000, guid: 9f40af972d07e45448fd509719884b52, type: 3}
+  m_Name: CustomField
   m_EditorClassIdentifier: 
-  sizeX: 10
-  sizeY: 4
-  fieldStateLinear: 01010101000001010101010101010000010101010101010100000101010101010101000001010101
+  sizeX: 6
+  sizeY: 6
+  fieldStateLinear: 010101010101010101010101010101010101010101010101010101010101010101010101
   startPoint: {x: 0, y: 0}

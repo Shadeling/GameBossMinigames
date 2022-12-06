@@ -58,8 +58,8 @@ namespace MyGame
                 CellsGrid.Add(cell.Position, cell);
             }
 
-            State.CurrentSelected.OnNewValue += OnSelected;
-            State.CurrentClicked.OnNewValue += OnClicked;
+            State.SelectedItem.OnNewValue += OnSelected;
+            State.ClickedItem.OnNewValue += OnClicked;
 
 
             BaseUnit baseUnit = new BaseUnit(unitTemplate); 

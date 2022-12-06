@@ -1,3 +1,4 @@
+using MyGame.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -11,17 +12,18 @@ namespace MyGame.Utils
 
     public sealed class MouseInteractionPresenter : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
-        
-        [SerializeField] private EventSystem _eventSystem;
-        [SerializeField] private GraphicRaycaster raycaster;
+        //[SerializeField] private Camera _camera;
+
+        [Inject] UIFields m_ui;
 
         [Inject] StateHolder State;
 
         private void Awake()
         {
+            FindSystems();
+
             /*var nonBlockedByUiFramesStream = Observable.EveryUpdate()
-                .Where(_ => !_eventSystem.IsPointerOverGameObject());
+                .Where(_ => !eventSystem.IsPointerOverGameObject());
 
             var leftClicksStream = nonBlockedByUiFramesStream
                 .Where(_ => Input.GetMouseButtonDown(0));
@@ -57,25 +59,25 @@ namespace MyGame.Utils
 
             var uiRaysLeft = leftUIStream.Select(_ =>
             {
-                var pointerEventData = new PointerEventData(_eventSystem);
+                var pointerEventData = new PointerEventData(m_ui.EventSystem);
                 pointerEventData.position = Input.mousePosition;
 
                 List<RaycastResult> results = new List<RaycastResult>();
 
                 //Raycast using the Graphics Raycaster and mouse click position
-                raycaster.Raycast(pointerEventData, results);
+                m_ui.GraphicRaycaster.Raycast(pointerEventData, results);
                 return results;
             });
 
             var uiRaysRight = rightUIStream.Select(_ =>
             {
-                var pointerEventData = new PointerEventData(_eventSystem);
+                var pointerEventData = new PointerEventData(m_ui.EventSystem);
                 pointerEventData.position = Input.mousePosition;
 
                 List<RaycastResult> results = new List<RaycastResult>();
 
                 //Raycast using the Graphics Raycaster and mouse click position
-                raycaster.Raycast(pointerEventData, results);
+                m_ui.GraphicRaycaster.Raycast(pointerEventData, results);
                 return results;
             });
 
@@ -83,7 +85,7 @@ namespace MyGame.Utils
             {
                 if (WeHit<ISelectable>(hits, out var selectable))
                 {
-                    State.CurrentSelected.SetValue(selectable);
+                    State.SelectedItem.SetValue(selectable);
                 }
             });
 
@@ -91,12 +93,20 @@ namespace MyGame.Utils
             {
                 if (WeHit<ISelectable>(hits, out var selectable))
                 {
-                    State.CurrentClicked.SetValue(selectable);
+                    State.ClickedItem.SetValue(selectable);
                 }
             });
-
-
         }
+
+        private void FindSystems()
+        {
+            /*if(eventSystem == null)
+            {
+                eventSystem = MainUIManager.In
+            }*/
+        }
+
+
         private void Init()
         {
 

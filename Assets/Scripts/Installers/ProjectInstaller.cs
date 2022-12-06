@@ -9,11 +9,11 @@ namespace MyGame
     public class ProjectInstaller : MonoInstaller<ProjectInstaller>
     {
         [SerializeField] StateHolder stateHolder;
-
         public override void InstallBindings()
         {
             Bind<StateHolder>(stateHolder, "StateHolder");
 
+            Container.Bind<UIFields>().FromComponentInNewPrefabResource("UI/UIRoot").AsSingle().NonLazy();
             Container.Bind<IInventory>().To<Inventory>().AsSingle().NonLazy();
 
         }

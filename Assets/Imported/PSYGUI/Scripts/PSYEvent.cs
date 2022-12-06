@@ -3,15 +3,16 @@
     None = -1,
 
     //Do not change or delete these	
-    WindowClosed = 0,
-    WindowOpened = 1,
-    ResolutionChanged = 2,
+    WindowClosed,
+    WindowOpened,
+    ResolutionChanged,
+    LayoutRequest,
 
     //Custom events
 
-    SoundRequestUI = 3,
-    WindowInited = 4,
-    CeaseUI = 5,
+    SoundRequestUI,
+    WindowInited,
+    CeaseUI,
 
-    SpellClicked = 6,
+    SpellClicked,
 }

@@ -21,6 +21,12 @@ namespace MyGame
 
         public int CurrentCooldown => throw new System.NotImplementedException();
 
+        public string Name => throw new System.NotImplementedException();
+
+        public string Description => throw new System.NotImplementedException();
+
+        public string SpriteName => throw new System.NotImplementedException();
+
         public virtual void OnCast(IUnit caster)
         {
             throw new System.NotImplementedException();

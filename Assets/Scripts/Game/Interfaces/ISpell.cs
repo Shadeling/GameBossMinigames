@@ -17,7 +17,7 @@ namespace MyGame
     /// <summary>
     /// Также нужны множители Урона, Дистанции, перезарядки и прочего от базовых характеристик(сила, ловкость, инт)
     /// </summary>
-    public interface ISpell
+    public interface ISpell : IVisualizable
     {
         public SpellType Type { get; }
 

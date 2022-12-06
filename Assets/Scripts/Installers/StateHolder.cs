@@ -11,8 +11,8 @@ namespace MyGame
         [SerializeField]  SelectableValue currentClicked;
         [SerializeField]  CurrentStateValue stateValue;
 
-        public SelectableValue CurrentSelected { get { return currentSelected; } }
-        public SelectableValue CurrentClicked { get { return currentClicked; } }
+        public SelectableValue SelectedItem { get { return currentSelected; } }
+        public SelectableValue ClickedItem { get { return currentClicked; } }
         public CurrentStateValue StateValue { get { return stateValue; } }
     }
 }
