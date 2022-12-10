@@ -18,9 +18,10 @@ namespace MyGame.Utils
 
         [Inject] StateHolder State;
 
+        private BattleCell lastCellForSpell;
+
         private void Awake()
         {
-            FindSystems();
 
             /*var nonBlockedByUiFramesStream = Observable.EveryUpdate()
                 .Where(_ => !eventSystem.IsPointerOverGameObject());
@@ -57,28 +58,33 @@ namespace MyGame.Utils
             var rightUIStream = blockedByUiFramesStream
                 .Where(_ => Input.GetMouseButtonDown(1));
 
+            var spellSelectState = blockedByUiFramesStream
+                .Where(_ => State.StateValue.CurrentValue == CurrentState.SelectSpell)
+                .Select(_ =>
+                {
+                    return RaycastUIResult();
+                });
+
+            spellSelectState.Subscribe(hits =>
+            {
+                if (WeHit<BattleCell>(hits, out var battleCell))
+                {
+                    if(lastCellForSpell!= battleCell)
+                    {
+                        PSYGUI.Event(PSYEvent.SpellTargetCellSelected, PSYParams.New(battleCell));
+                        lastCellForSpell = battleCell;
+                    }
+                }
+            });
+
             var uiRaysLeft = leftUIStream.Select(_ =>
             {
-                var pointerEventData = new PointerEventData(m_ui.EventSystem);
-                pointerEventData.position = Input.mousePosition;
-
-                List<RaycastResult> results = new List<RaycastResult>();
-
-                //Raycast using the Graphics Raycaster and mouse click position
-                m_ui.GraphicRaycaster.Raycast(pointerEventData, results);
-                return results;
+                return RaycastUIResult();
             });
 
             var uiRaysRight = rightUIStream.Select(_ =>
             {
-                var pointerEventData = new PointerEventData(m_ui.EventSystem);
-                pointerEventData.position = Input.mousePosition;
-
-                List<RaycastResult> results = new List<RaycastResult>();
-
-                //Raycast using the Graphics Raycaster and mouse click position
-                m_ui.GraphicRaycaster.Raycast(pointerEventData, results);
-                return results;
+                return RaycastUIResult();
             });
 
             uiRaysLeft.Subscribe(hits =>
@@ -98,12 +104,16 @@ namespace MyGame.Utils
             });
         }
 
-        private void FindSystems()
+        private List<RaycastResult> RaycastUIResult()
         {
-            /*if(eventSystem == null)
-            {
-                eventSystem = MainUIManager.In
-            }*/
+            var pointerEventData = new PointerEventData(m_ui.EventSystem);
+            pointerEventData.position = Input.mousePosition;
+
+            List<RaycastResult> results = new List<RaycastResult>();
+
+            //Raycast using the Graphics Raycaster and mouse click position
+            m_ui.GraphicRaycaster.Raycast(pointerEventData, results);
+            return results;
         }
 
 

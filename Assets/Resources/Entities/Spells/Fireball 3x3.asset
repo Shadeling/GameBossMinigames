@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da48dbb586b253e43b53f76e37524bd3, type: 3}
+  m_Name: Fireball 3x3
+  m_EditorClassIdentifier: 
+  name: Fireball
+  description: 
+  spriteName: 
+  type: 3
+  cooldown:
+    StartValue: 3
+    multipliers: []
+  zone: {fileID: 11400000, guid: 064e7b511ad89c7469739ccf8f088cfd, type: 2}
+  minDistance:
+    StartValue: 0
+    multipliers: []
+  maxDistance:
+    StartValue: 10
+    multipliers: []
+  damageType: 1
+  changes:
+  - statToChange: 101
+    resistanceType: -1000
+    change:
+      StartValue: 10
+      multipliers: []
+  buffs: []
+  switchTilesTo: 0

@@ -12,21 +12,52 @@ namespace MyGame
         private PassiveType passiveType;
 
         [SerializeField]
+        public EffectType effectType;
+
+        [SerializeField]
         private List<StatValue> stats;
 
         [SerializeField]
         private List<ResistanceValue> resistances;
 
         [SerializeField]
-        private List<BuffBase> buffs;
+        private List<BuffWithDuration> buffs;
 
 
 
         public PassiveType PassiveType => passiveType;
 
+        public EffectType EffectType => effectType;
+
         public void ApplyEffect(IUnit ally)
         {
-            throw new System.NotImplementedException();
+            foreach (StatValue stat in stats)
+            {
+                ally.ChangeStats(stat.stat, stat.value);
+            }
+
+            foreach(ResistanceValue resistance in resistances)
+            {
+                ally.ChangeResistance(resistance.resistanceType, resistance.change);
+            }
+
+            foreach (var buff in buffs)
+            {
+                ally.AddBuff(buff.buff, buff.duration);
+            }
+        }
+
+        public void CancelEffect(IUnit ally)
+        {
+            foreach (StatValue stat in stats)
+            {
+                ally.ChangeStats(stat.stat, -1 * stat.value);
+            }
+
+            foreach (ResistanceValue resistance in resistances)
+            {
+                ally.ChangeResistance(resistance.resistanceType, -1 * resistance.change);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MyGame.UI
 
     public class WndSpellSelection : ARController
     {
-        [SerializeField] ARController itemsParent;
+        [SerializeField] RectTransform itemsParent;
 
         [Inject] StateHolder state;
 
@@ -22,11 +22,6 @@ namespace MyGame.UI
             state.SelectedItem.OnNewValue += OnCellClicked;
 
             currentSpells.Clear();
-        }
-
-        protected override void OnSetup(PSYParams param)
-        {
-
         }
 
         private void OnCellClicked(ISelectable selected)
@@ -47,7 +42,10 @@ namespace MyGame.UI
         {
             while(unit.Spells.Count > currentSpells.Count)
             {
-                currentSpells.Add((ItemSpell)itemsParent.AddChild(PSYItem.ItemSpell));
+                var spell = (ItemSpell)this.AddChild(PSYItem.ItemSpell);
+                spell.view.index = currentSpells.Count;
+                spell.transform.SetParent(itemsParent);
+                currentSpells.Add(spell);
             }
 
             for(int i = 0; i < currentSpells.Count; i++)
@@ -70,6 +68,16 @@ namespace MyGame.UI
             {
                 case PSYEvent.SpellClicked:
                     SetupSpellStats(param.Get<ISpell>());
+                    break;
+            }
+        }
+
+        protected override void OnChildClick(PSYViewEventArgs e)
+        {
+            switch (e.item)
+            {
+                case PSYItem.ItemSpell:
+                    SetupSpellStats(currentUnit.Spells[e.index]);
                     break;
             }
         }

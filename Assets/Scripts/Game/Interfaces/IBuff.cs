@@ -9,22 +9,21 @@ namespace MyGame
     {
         DurationEffect = 0,
         EveryTurn = 1,
+        OnEndEffect = 2,
     }
 
     public interface IBuff : IVisualizable
     {
         BuffType BuffType { get; }
-        bool isNegative { get; }
+        DamageType DamageType { get; }
 
-        UnitStat AffectStat { get; }
+        bool IsNegative { get; }
 
-        int duration { get; }
+        public abstract void OnApply(IUnit unit);
 
-        public void OnApply(IUnit unit);
+        public abstract void OnRemove(IUnit unit);
 
-        public void OnRemove(IUnit unit);
-
-        public void EveryTurnUpdate(IUnit unit);
+        public abstract void EveryTurnUpdate(IUnit unit);
     }
 
 }

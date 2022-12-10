@@ -11,7 +11,9 @@ namespace MyGame
 
         AllyBuffZone = 1,
         EnemyEffectZone = 2,
+        EffectOnAll = 3,
 
+        TransformTiles = 4,
     }
 
     /// <summary>
@@ -33,7 +35,7 @@ namespace MyGame
 
         public int CurrentCooldown { get; }
 
-
+        public abstract void OnTurnEnd();
         public abstract void OnCast(IUnit caster);
         public abstract void OnTargetAlly(List<IUnit> targets);
 
@@ -47,17 +49,10 @@ namespace MyGame
     public struct SpellStatWithMultiplier
     {
         [SerializeField]
-        public float StartValue;
+        public int StartValue;
 
         [SerializeField]
-        public List<SpellMult> multipliers;
+        public List<StatMultiplier> multipliers;
 
-    }
-
-    [Serializable]
-    public struct SpellMult
-    {
-        public UnitStat stat;
-        public float multiplier;
     }
 }

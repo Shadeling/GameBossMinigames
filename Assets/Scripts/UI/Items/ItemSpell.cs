@@ -6,11 +6,11 @@ using UnityEngine.UI;
 namespace MyGame.UI
 {
 
-    public class ItemSpell : PSYController
+    public class ItemSpell : ARController
     {
         [SerializeField] Image spellImage;
 
-        private ISpell spell;
+        public ISpell spell;
 
         protected override void OnSetup(PSYParams param)
         {
@@ -28,9 +28,9 @@ namespace MyGame.UI
         }
 
 
-        protected override void OnChildClick(PSYViewEventArgs e)
+        /*protected override void OnChildClick(PSYViewEventArgs e)
         {
-            PSYGUI.Event(PSYEvent.SpellClicked, PSYParams.New(spell));
-        }
+            //PSYGUI.Event(PSYEvent.SpellClicked, PSYParams.New(spell));
+        }*/
     }
 }

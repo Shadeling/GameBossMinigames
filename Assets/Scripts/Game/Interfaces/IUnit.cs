@@ -17,25 +17,28 @@ namespace MyGame
     }
 
     public interface IUnit : IUnitStats
-    {
-        public List<IBuff> Buffs { get; }
-
+    { 
         public bool IsAlive { get; }
 
-        public bool EquipItem(BaseEquipment item);
-        public bool RemoveItem(BaseEquipment item);
+        public abstract void OnTurnEnd();
+        public abstract bool EquipItem(BaseEquipment item);
+        public abstract bool RemoveItem(BaseEquipment item);
 
-        public void TakeHit(float damage, DamageType type = DamageType.Pure);
+        public abstract void TakeHit(float damage, DamageType type = DamageType.Pure);
 
-        public void Heal(float heal);
+        public abstract void Heal(float heal);
 
-        public void ChangeStats(UnitStat stat, float value);
+        public abstract void ChangeStats(UnitStat stat, int value, DamageType damageType = DamageType.None);
 
-        public float GetStat(UnitStat stat);
+        public abstract void AddBuff(IBuff buff, int duration);
 
-        public void ChangeResistance(DamageType damageType, float value);
+        public abstract void ClearBuffs(bool onlyDebuffs = false);
 
-        public void CreateFromTemplate(UnitTemplate template);
+        public abstract float GetStat(UnitStat stat);
+
+        public abstract void ChangeResistance(DamageType damageType, int value);
+
+        public abstract void CreateFromTemplate(UnitTemplate template);
     }
 
 

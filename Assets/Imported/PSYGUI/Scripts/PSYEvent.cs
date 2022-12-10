@@ -15,4 +15,5 @@
     CeaseUI,
 
     SpellClicked,
+    SpellTargetCellSelected,
 }

@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Content: {fileID: 6747187032364046739}
   m_Horizontal: 1
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -497,7 +497,7 @@ MonoBehaviour:
   monopolist: 0
   selectable: {fileID: 0}
   joyFrame: {fileID: 0}
-  itemsParent: {fileID: 6747187032364046736}
+  itemsParent: {fileID: 6747187032364046739}
 --- !u!1 &6747187033009403313
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,7 +747,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6747187033711879971}
   m_HandleRect: {fileID: 6747187033711879970}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -5,8 +5,7 @@ namespace MyGame
 
     public enum UnitStat
     {
-        HP = 1,
-        Damage = 2,
+        MaxHP = 1,
 
         Strength = 3,       //Способности и здоровье
         Agility = 4,        //Способности и очередность хода
@@ -14,11 +13,17 @@ namespace MyGame
 
         MovePoints = 6,
         Resistances = 7,
+
+
+        // Stats for spells
+        HealUnit = 100,
+        DealDamage = 101,
     }
 
     public enum DamageType
     {
-        Pure = -1,
+        None = -1000,
+        Pure = 0,
 
         Fire = 1,
         Frost = 2,
@@ -31,17 +36,22 @@ namespace MyGame
     [Serializable]
     public struct StatValue
     {
-        public string Name;
         public UnitStat stat;
-        public float value;
+        public int value;
     }
 
     [Serializable]
     public struct ResistanceValue
     {
-        public string Name;
         public DamageType resistanceType;
-        public float change;
+        public int change;
+    }
+
+    [Serializable]
+    public struct StatMultiplier
+    {
+        public UnitStat stat;
+        public float value;
     }
 
 }

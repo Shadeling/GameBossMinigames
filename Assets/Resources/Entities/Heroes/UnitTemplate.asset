@@ -17,26 +17,19 @@ MonoBehaviour:
   unitSpriteName: Test
   controlledByPlayer: 1
   unitClass: 1
-  baseSpells: []
+  baseSpells:
+  - {fileID: 11400000, guid: dd53b876201aa6c4b91e03b781a0c0db, type: 2}
   basePassives: []
   startEquipment: []
   stats:
-  - Name: HP
-    stat: 1
+  - stat: 1
     value: 10
-  - Name: Damage
-    stat: 2
-    value: 5
-  - Name: Move Points
-    stat: 6
+  - stat: 6
     value: 2
-  - Name: Strength
-    stat: 3
+  - stat: 3
     value: 1
-  - Name: Agility
-    stat: 4
+  - stat: 4
     value: 1
-  - Name: Intelligence
-    stat: 5
+  - stat: 5
     value: 1
   resistances: []

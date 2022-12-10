@@ -66,8 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 3120792615799024563}
   - component: {fileID: 5445524052929157697}
   m_Layer: 5
-  m_Name: SpellItem
+  m_Name: ItemSpell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,7 +146,7 @@ MonoBehaviour:
   isRadioGroup: 0
   animDoubling: 0
   puppet: 1
-  animationBlocksInputLocal: 1
+  animationBlocksInputLocal: 0
   animationBlocksInputGlobal: 0
   childrenClickInterval: 0
   sets: []
@@ -185,4 +185,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ignoreEvents: 
   parent: {fileID: 0}
+  soundAlways: 0
+  cameraLock: 0
+  soundOnClick: 1
+  sound: -1
+  soundDeselect: -1
+  tutorialID: -1
+  monopolist: 0
+  selectable: {fileID: 0}
+  joyFrame: {fileID: 0}
   spellImage: {fileID: 2657042729723133810}

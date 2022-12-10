@@ -1,50 +1,174 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MyGame
 {
+    [Serializable]
+    public class SpellStatChange
+    {
+
+        [SerializeField]
+        public UnitStat statToChange;
+
+        [SerializeField]
+        public DamageType resistanceType;
+
+        [SerializeField]
+        public SpellStatWithMultiplier change;
+    }
+
+
+
     [CreateAssetMenu(fileName = "SpellBase", menuName = "ScriptableObjects/Spells/SpellBase", order = 1)]
     public class SpellBase : ScriptableObject, ISpell
     {
-        public SpellType Type => throw new System.NotImplementedException();
+        [SerializeField]
+        private string name;
 
-        public DamageType DamageType { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        [SerializeField]
+        private string description;
 
-        public SpellStatWithMultiplier MinDistance => throw new System.NotImplementedException();
+        [SerializeField]
+        private string spriteName;
 
-        public SpellStatWithMultiplier MaxDistance => throw new System.NotImplementedException();
 
-        public ZoneSO Zone => throw new System.NotImplementedException();
+        [Space(30),SerializeField]
+        private SpellType type;
 
-        public SpellStatWithMultiplier Cooldown => throw new System.NotImplementedException();
+        [SerializeField]
+        private SpellStatWithMultiplier cooldown;
 
-        public int CurrentCooldown => throw new System.NotImplementedException();
+        [SerializeField]
+        private ZoneSO zone;
 
-        public string Name => throw new System.NotImplementedException();
 
-        public string Description => throw new System.NotImplementedException();
+        [Space(20), Header("Stats"),SerializeField]
+        private SpellStatWithMultiplier minDistance;
 
-        public string SpriteName => throw new System.NotImplementedException();
+        [SerializeField]
+        private SpellStatWithMultiplier maxDistance;
+
+        [Space(20),SerializeField]
+        private DamageType damageType;
+
+        [SerializeField]
+        private List<SpellStatChange> changes;
+
+        [SerializeField]
+        private List<BuffWithDuration> buffs;
+
+        [SerializeField]
+        private CellType switchTilesTo = CellType.None;
+
+
+        private int currentCooldown = 0;
+
+        private IUnit caster;
+
+        #region ISpell
+        public SpellType Type => type;
+
+        public DamageType DamageType { get => damageType; set => damageType = value; }
+
+        public SpellStatWithMultiplier MinDistance => minDistance;
+
+        public SpellStatWithMultiplier MaxDistance => maxDistance;
+
+        public ZoneSO Zone => zone;
+
+        public SpellStatWithMultiplier Cooldown => cooldown;
+
+        public int CurrentCooldown => currentCooldown;
+
+        public string Name => name;
+
+        public string Description => description;
+
+        public string SpriteName => spriteName;
+
+        #endregion
 
         public virtual void OnCast(IUnit caster)
         {
-            throw new System.NotImplementedException();
+            this.caster = caster;
+
+            currentCooldown = Mathf.CeilToInt(FindFinalStatChange(cooldown));
+
+            if (type == SpellType.SelfBuff)
+            {
+                ApplySpellEffectToUnit(caster);
+            }
         }
 
         public virtual void OnTargetAlly(List<IUnit> targets)
         {
-            throw new System.NotImplementedException();
+            if(type == SpellType.AllyBuffZone || type == SpellType.EffectOnAll)
+            {
+                foreach (var unit in targets)
+                {
+                    ApplySpellEffectToUnit(unit);
+                }
+            }
         }
 
         public virtual void OnTargetEnemy(List<IUnit> targets)
         {
-            throw new System.NotImplementedException();
+            if (type == SpellType.EnemyEffectZone || type == SpellType.EffectOnAll)
+            {
+                foreach (var unit in targets)
+                {
+                    ApplySpellEffectToUnit(unit);
+                }
+            }
         }
 
         public virtual void OnTargetTiles(List<IBattleCell> tiles)
         {
-            throw new System.NotImplementedException();
+            if(switchTilesTo != CellType.None)
+            {
+                foreach(var cell in tiles)
+                {
+                    cell.CellType = switchTilesTo;
+                }
+            }
+        }
+
+        public virtual void OnTurnEnd()
+        {
+            currentCooldown--;
+        }
+
+        protected void ApplySpellEffectToUnit(IUnit unit)
+        {
+            foreach(var statChange in changes)
+            {
+                int finalChange = FindFinalStatChange(statChange.change);
+
+                unit.ChangeStats(statChange.statToChange, finalChange, damageType);
+            }
+
+            foreach(var buff in buffs)
+            {
+                unit.AddBuff(buff.buff, buff.duration);
+            }
+
+        }
+
+        protected int FindFinalStatChange(SpellStatWithMultiplier spellStat)
+        {
+            float finalValue = spellStat.StartValue;
+
+            if(caster != null)
+            {
+                foreach (var multiplier in spellStat.multipliers)
+                {
+                    finalValue += multiplier.value * caster.GetStat(multiplier.stat);
+                }
+            }
+
+            return Mathf.FloorToInt(finalValue);
         }
     }
 }

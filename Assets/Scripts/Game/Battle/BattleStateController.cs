@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Utils;
 using Zenject;
+using MyGame.UI;
 
 namespace MyGame
 {
 
-    public class BattleStateController : MonoBehaviour
+    public class BattleStateController : MonoBehaviour, IPSYEventHandler
     {
         [Inject] StateHolder State;
 
@@ -18,6 +19,8 @@ namespace MyGame
         private Dictionary<Vector2Int, BattleCell> CellsGrid = new Dictionary<Vector2Int, BattleCell>();
 
         private List<IUnit> activeUnits = new List<IUnit>();
+
+        private ISpell selectedSpell;
 
 
         private BattleCell selectedCell;
@@ -52,6 +55,8 @@ namespace MyGame
 
         public void Init(List<BattleCell> newCells)
         {
+            MainUIManager.AddSubscriber(this);
+
             CellsGrid.Clear();
             foreach (BattleCell cell in newCells)
             {
@@ -62,7 +67,7 @@ namespace MyGame
             State.ClickedItem.OnNewValue += OnClicked;
 
 
-            BaseUnit baseUnit = new BaseUnit(unitTemplate); 
+            UnitBase baseUnit = new UnitBase(unitTemplate); 
             activeUnits.Add(baseUnit);
 
             var r = Random.Range(0, newCells.Count);
@@ -209,7 +214,34 @@ namespace MyGame
             }
         }
 
+        public void PSYEventHandler(PSYEvent e, PSYParams param)
+        {
+            switch (e)
+            {
+                case PSYEvent.SpellTargetCellSelected:
+                    var cell = param.Get<BattleCell>();
+                    if(cell != null && selectedSpell!=null)
+                    {
+                        ClearHighlight(CellHighlightState.SpellZoneHighlight);
+                        ApplyOnZone(cell, selectedSpell.Zone, CellHighlightState.SpellZoneHighlight);
+                    }
+                    break;
 
+                case PSYEvent.SpellClicked:
+                    ClearHighlight();
+                    selectedSpell = param.Get<ISpell>();
+                    if(selectedSpell != null)
+                    {
+                        State.StateValue.SetValue(CurrentState.SelectSpell);
+                    }
+                    break;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            MainUIManager.RemoveSubscriber(this);
+        }
     }
 
 }
