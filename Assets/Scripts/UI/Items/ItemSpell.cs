@@ -28,9 +28,9 @@ namespace MyGame.UI
         }
 
 
-        /*protected override void OnChildClick(PSYViewEventArgs e)
+        protected override void OnChildClick(PSYViewEventArgs e)
         {
             //PSYGUI.Event(PSYEvent.SpellClicked, PSYParams.New(spell));
-        }*/
+        }
     }
 }

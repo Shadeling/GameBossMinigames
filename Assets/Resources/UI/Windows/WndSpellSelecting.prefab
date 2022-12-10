@@ -122,8 +122,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6747187032364046739}
-  - component: {fileID: 6747187032364046737}
-  - component: {fileID: 6747187032364046736}
   - component: {fileID: 6747187032364046766}
   m_Layer: 5
   m_Name: Content
@@ -152,81 +150,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6747187032364046737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6747187032364046738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6d65c16d0bc8794793c96993d791518, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 0}
-  type: 2
-  window: 0
-  item: -1
-  index: 0
-  state:
-    id: 
-    states: 
-  isSelectedOnStart: 0
-  isEnabledOnStart: 1
-  clickOnStart: 0
-  enableOnStart: 0
-  disableOnStart: 0
-  superposition: 0
-  isSelectable: 1
-  isSwitch: 0
-  isRadioGroup: 0
-  animDoubling: 0
-  puppet: 1
-  animationBlocksInputLocal: 1
-  animationBlocksInputGlobal: 0
-  childrenClickInterval: 0
-  sets: []
-  events: 0b000000
-  animationEvents: 
-  widgets: []
-  parent: {fileID: 6747187032746437503}
-  hold:
-    threshold: 0
-    intervalSteps: 0
-    curPhase: 0
-    curStep: 0
-    lastTime: 0
-    incrementTime: 1
-    increment: 1
-    ignoreNextClick: 0
-    firstThreshold: 0.8
-    baseThreshold: 0.4
-    acceleration: 0.2
-    enabled: 0
---- !u!114 &6747187032364046736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6747187032364046738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bc8d424a79214419a7821842016c01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ignoreEvents: 
-  parent: {fileID: 6747187032746437502}
-  soundAlways: 0
-  cameraLock: 0
-  soundOnClick: 1
-  sound: -1
-  soundDeselect: -1
-  tutorialID: -1
-  monopolist: 0
-  selectable: {fileID: 0}
-  joyFrame: {fileID: 0}
 --- !u!114 &6747187032364046766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +296,7 @@ GameObject:
   - component: {fileID: 6747187032746437473}
   - component: {fileID: 6747187032746437503}
   - component: {fileID: 6747187032746437502}
+  - component: {fileID: 541397128905072513}
   m_Layer: 5
   m_Name: WndSpellSelecting
   m_TagString: Untagged
@@ -423,10 +347,10 @@ MonoBehaviour:
     id: 
     states: 
   isSelectedOnStart: 0
-  isEnabledOnStart: 1
+  isEnabledOnStart: 0
   clickOnStart: 0
   enableOnStart: 0
-  disableOnStart: 0
+  disableOnStart: 1
   superposition: 0
   isSelectable: 0
   isSwitch: 0
@@ -436,7 +360,67 @@ MonoBehaviour:
   animationBlocksInputLocal: 1
   animationBlocksInputGlobal: 0
   childrenClickInterval: 0
-  sets: []
+  sets:
+  - evnt: 4
+    view: {fileID: 6747187032746437503}
+    items:
+    - startValue: {x: 0, y: 0, z: 0, w: 0}
+      newValue: {x: 1, y: 0, z: 0, w: 0}
+      resValue: {x: 0, y: 0, z: 0, w: 0}
+      type: 0
+      target: Entire
+      ease: 1
+      time: 0.1
+      delay: 0
+      loops: 1
+      enabled: 1
+      relative: 0
+      random: 0
+      randomTime: 0
+      addTime: 0
+      rNegative: 0
+      bIndexBasedDelay: 0
+      indexBasedDelay: 0
+      IBDIndex: 0
+      useDepth: 0
+      useAlpha: 0
+    enabled: 1
+    cyclic: 0
+    disableOnComplete: 1
+    killOnComplete: 1
+    childrenAnimationInterval: 0
+    delay: 0
+    isPlaying: 0
+  - evnt: 5
+    view: {fileID: 6747187032746437503}
+    items:
+    - startValue: {x: 0, y: 0, z: 0, w: 0}
+      newValue: {x: 0, y: 0, z: 0, w: 0}
+      resValue: {x: 0, y: 0, z: 0, w: 0}
+      type: 0
+      target: Entire
+      ease: 1
+      time: 0.2
+      delay: 0
+      loops: 1
+      enabled: 1
+      relative: 0
+      random: 0
+      randomTime: 0
+      addTime: 0
+      rNegative: 0
+      bIndexBasedDelay: 0
+      indexBasedDelay: 0
+      IBDIndex: 0
+      useDepth: 0
+      useAlpha: 0
+    enabled: 1
+    cyclic: 0
+    disableOnComplete: 0
+    killOnComplete: 1
+    childrenAnimationInterval: 0
+    delay: 0
+    isPlaying: 0
   events: 0b000000
   animationEvents: 
   widgets:
@@ -498,6 +482,18 @@ MonoBehaviour:
   selectable: {fileID: 0}
   joyFrame: {fileID: 0}
   itemsParent: {fileID: 6747187032364046739}
+--- !u!225 &541397128905072513
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6747187032746437472}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6747187033009403313
 GameObject:
   m_ObjectHideFlags: 0

@@ -205,7 +205,7 @@ namespace MyGame
                     if (!zone.fieldStateLinear[x+y*zone.sizeX])
                         continue;
 
-                    offset.Set(zone.startPoint.x - x, zone.startPoint.y - y);
+                    offset.Set(target.Position.x + zone.startPoint.x - x, target.Position.y + zone.startPoint.y - y);
                     if (CellsGrid.TryGetValue(offset, out var battleCell))
                     {
                         battleCell.ChangeState(cellState);
@@ -222,6 +222,7 @@ namespace MyGame
                     var cell = param.Get<BattleCell>();
                     if(cell != null && selectedSpell!=null)
                     {
+                        Debug.LogWarning($"Hover on cell x={cell.Position.x}, y={cell.Position.y}");
                         ClearHighlight(CellHighlightState.SpellZoneHighlight);
                         ApplyOnZone(cell, selectedSpell.Zone, CellHighlightState.SpellZoneHighlight);
                     }

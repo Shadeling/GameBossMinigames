@@ -32,9 +32,14 @@ namespace MyGame.UI
                 currentUnit = cell.MyUnit;
 
                 if (!cell.HasUnit)
+                {
                     view.Disable();
+                }
                 else
+                {
+                    view.Enable();
                     DrawUnitInfo(cell.MyUnit);
+                }
             }
         }
 
@@ -51,9 +56,13 @@ namespace MyGame.UI
             for(int i = 0; i < currentSpells.Count; i++)
             {
                 if (unit.Spells.Count > i)
-                    currentSpells[i].Setup(new PSYParams(unit.Spells[i]));
+                {
+                    currentSpells[i].Setup(unit.Spells[i].ToParam());
+                }
                 else
+                {
                     currentSpells[i].Setup(new PSYParamsEmpty());
+                }
             }
         }
 
@@ -64,12 +73,7 @@ namespace MyGame.UI
 
         public override void PSYEventHandler(PSYEvent e, PSYParams param)
         {
-            switch (e)
-            {
-                case PSYEvent.SpellClicked:
-                    SetupSpellStats(param.Get<ISpell>());
-                    break;
-            }
+            
         }
 
         protected override void OnChildClick(PSYViewEventArgs e)
@@ -77,7 +81,12 @@ namespace MyGame.UI
             switch (e.item)
             {
                 case PSYItem.ItemSpell:
-                    SetupSpellStats(currentUnit.Spells[e.index]);
+                    if(currentUnit.Spells.Count > e.index)
+                    {
+                        var sp = currentUnit.Spells[e.index];
+                        SetupSpellStats(sp);
+                        PSYGUI.Event(PSYEvent.SpellClicked, PSYParams.New(sp).ToParam());
+                    }
                     break;
             }
         }

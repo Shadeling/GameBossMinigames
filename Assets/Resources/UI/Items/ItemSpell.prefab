@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 8123852122934118515}
   - component: {fileID: 3120792615799024563}
   - component: {fileID: 5445524052929157697}
+  - component: {fileID: 4581112546916150439}
   m_Layer: 5
   m_Name: ItemSpell
   m_TagString: Untagged
@@ -149,7 +150,47 @@ MonoBehaviour:
   animationBlocksInputLocal: 0
   animationBlocksInputGlobal: 0
   childrenClickInterval: 0
-  sets: []
+  sets:
+  - evnt: 4
+    view: {fileID: 3120792615799024563}
+    items:
+    - startValue: {x: 0, y: 0, z: 0, w: 0}
+      newValue: {x: 1, y: 0, z: 0, w: 0}
+      resValue: {x: 0, y: 0, z: 0, w: 0}
+      type: 0
+      target: Entire
+      ease: 1
+      time: 0.2
+      delay: 0
+      loops: 1
+      enabled: 1
+      relative: 0
+      random: 0
+      randomTime: 0
+      addTime: 0
+      rNegative: 0
+      bIndexBasedDelay: 0
+      indexBasedDelay: 0.1
+      IBDIndex: 0
+      useDepth: 0
+      useAlpha: 0
+    enabled: 1
+    cyclic: 0
+    disableOnComplete: 1
+    killOnComplete: 1
+    childrenAnimationInterval: 0
+    delay: 0
+    isPlaying: 0
+  - evnt: 5
+    view: {fileID: 3120792615799024563}
+    items: []
+    enabled: 1
+    cyclic: 0
+    disableOnComplete: 1
+    killOnComplete: 1
+    childrenAnimationInterval: 0
+    delay: 0
+    isPlaying: 0
   events: 0b000000
   animationEvents: 
   widgets:
@@ -195,3 +236,15 @@ MonoBehaviour:
   selectable: {fileID: 0}
   joyFrame: {fileID: 0}
   spellImage: {fileID: 2657042729723133810}
+--- !u!225 &4581112546916150439
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125028275864267474}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
