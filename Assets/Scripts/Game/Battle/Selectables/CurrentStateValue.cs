@@ -14,8 +14,8 @@ namespace MyGame.Utils
     public enum CurrentState
     {
         None = -1,
-        SelectCellWithUnit = 1,
-        SelectCellWithoutUnit = 2,
-        SelectSpell = 3,
+        CellWithUnitSelected = 1,
+        CellWithoutUnitSelected = 2,
+        SpellSelected = 3,
     }
 }

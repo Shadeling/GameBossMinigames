@@ -46,4 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSelected: {fileID: 11400000, guid: b64067079045a9a46ab0f1c47a3dd527, type: 2}
   currentClicked: {fileID: 11400000, guid: 7c632ce0694fc1e4d8ed5abcd277e231, type: 2}
+  currentHover: {fileID: 11400000, guid: ab81468bc3a9ab9468259afd3628c3e6, type: 2}
+  selectedSpellValue: {fileID: 11400000, guid: 689474973cd875b41bc435d988eaffd6, type: 2}
   stateValue: {fileID: 11400000, guid: e33b34ded5e67ee43aaedf3e010fdef4, type: 2}

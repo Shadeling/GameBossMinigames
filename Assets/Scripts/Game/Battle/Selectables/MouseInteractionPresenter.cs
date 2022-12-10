@@ -59,7 +59,7 @@ namespace MyGame.Utils
                 .Where(_ => Input.GetMouseButtonDown(1));
 
             var spellSelectState = blockedByUiFramesStream
-                .Where(_ => State.StateValue.CurrentValue == CurrentState.SelectSpell)
+                .Where(_ => State.StateValue.CurrentValue == CurrentState.SpellSelected)
                 .Select(_ =>
                 {
                     return RaycastUIResult();
@@ -71,7 +71,7 @@ namespace MyGame.Utils
                 {
                     if(lastCellForSpell!= battleCell)
                     {
-                        PSYGUI.Event(PSYEvent.SpellTargetCellSelected, PSYParams.New(battleCell));
+                        State.CurrentHover.SetValue(battleCell);
                         lastCellForSpell = battleCell;
                     }
                 }

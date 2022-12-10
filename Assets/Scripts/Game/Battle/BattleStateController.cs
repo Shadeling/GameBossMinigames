@@ -8,7 +8,7 @@ using MyGame.UI;
 namespace MyGame
 {
 
-    public class BattleStateController : MonoBehaviour, IPSYEventHandler
+    public class BattleStateController : MonoBehaviour
     {
         [Inject] StateHolder State;
 
@@ -20,15 +20,11 @@ namespace MyGame
 
         private List<IUnit> activeUnits = new List<IUnit>();
 
-        private ISpell selectedSpell;
-
-
         private BattleCell selectedCell;
         private BattleCell SelectedCell {
             get { return selectedCell; } 
             set
             {
-
                 if (selectedCell == value)
                     return;
 
@@ -46,16 +42,16 @@ namespace MyGame
                     selectedCell.Select(true);
 
                     if (selectedCell.HasUnit)
-                        State.StateValue.SetValue(CurrentState.SelectCellWithUnit);
+                        State.StateValue.SetValue(CurrentState.CellWithUnitSelected);
                     else
-                        State.StateValue.SetValue(CurrentState.SelectCellWithoutUnit);
+                        State.StateValue.SetValue(CurrentState.CellWithoutUnitSelected);
                 }
             }
         }
 
         public void Init(List<BattleCell> newCells)
         {
-            MainUIManager.AddSubscriber(this);
+            //MainUIManager.AddSubscriber(this);
 
             CellsGrid.Clear();
             foreach (BattleCell cell in newCells)
@@ -63,8 +59,12 @@ namespace MyGame
                 CellsGrid.Add(cell.Position, cell);
             }
 
+            State.StateValue.SetValue(CurrentState.None);
             State.SelectedItem.OnNewValue += OnSelected;
-            State.ClickedItem.OnNewValue += OnClicked;
+            State.ClickedItem.OnNewValue += OnClickedRMB;
+            State.CurrentHover.OnNewValue += OnCellWithSpellHover;
+
+            State.SelectedSpellValue.OnNewValue += OnSpellSelect;
 
 
             UnitBase baseUnit = new UnitBase(unitTemplate); 
@@ -93,19 +93,15 @@ namespace MyGame
             }
         }
 
-        private void OnClicked(ISelectable selectable)
+        private void OnClickedRMB(ISelectable selectable)
         {
             BattleCell clickedCell = selectable as BattleCell;
             if (clickedCell)
             {
                 switch (State.StateValue.CurrentValue)
                 {
-                    case CurrentState.None:
-                        break;
 
-                    case CurrentState.SelectCellWithoutUnit:
-                        break;
-                    case CurrentState.SelectCellWithUnit:
+                    case CurrentState.CellWithUnitSelected:
                         int moves = (int)SelectedCell.MyUnit.GetStat(UnitStat.MovePoints);
                         if (!CanReach(clickedCell, SelectedCell, moves))
                             return;
@@ -117,9 +113,34 @@ namespace MyGame
                             DrawMoveColors();
                         }
                         break;
+
+
+                    default:
+                        break;
                 }
             }
 
+        }
+
+        private void OnCellWithSpellHover(ISelectable selectable)
+        {
+            BattleCell cell = selectable as BattleCell;
+            var spell = State.SelectedSpellValue.CurrentValue;
+            if (cell && spell != null)
+            {
+                Debug.LogWarning($"Hover on cell x={cell.Position.x}, y={cell.Position.y}");
+                ClearHighlight(CellHighlightState.SpellZoneHighlight);
+                ApplyOnZone(cell, spell.Zone, CellHighlightState.SpellZoneHighlight);
+            }
+        }
+
+        private void OnSpellSelect(ISpell spell)
+        {
+            ClearHighlight();
+            if (spell != null)
+            {
+                State.StateValue.SetValue(CurrentState.SpellSelected);
+            }
         }
 
         public void ClearHighlight(CellHighlightState state = CellHighlightState.None)
@@ -214,7 +235,7 @@ namespace MyGame
             }
         }
 
-        public void PSYEventHandler(PSYEvent e, PSYParams param)
+        /*public void PSYEventHandler(PSYEvent e, PSYParams param)
         {
             switch (e)
             {
@@ -237,11 +258,11 @@ namespace MyGame
                     }
                     break;
             }
-        }
+        }*/
 
         private void OnDestroy()
         {
-            MainUIManager.RemoveSubscriber(this);
+            //MainUIManager.RemoveSubscriber(this);
         }
     }
 

@@ -85,7 +85,7 @@ namespace MyGame.UI
                     {
                         var sp = currentUnit.Spells[e.index];
                         SetupSpellStats(sp);
-                        PSYGUI.Event(PSYEvent.SpellClicked, PSYParams.New(sp).ToParam());
+                        state.SelectedSpellValue.SetValue(sp);
                     }
                     break;
             }
