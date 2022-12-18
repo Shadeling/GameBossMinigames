@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da48dbb586b253e43b53f76e37524bd3, type: 3}
-  m_Name: Fireball 3x3
+  m_Name: Melee T Strike
   m_EditorClassIdentifier: 
-  name: Fireball
+  name: Melee Strike
   description: 
   spriteName: 
   type: 3
   cooldown:
     StartValue: 3
     multipliers: []
-  zone: {fileID: 11400000, guid: 0bdf7da9d5ac51d4cb8a29fc686cdbb4, type: 2}
+  zone: {fileID: 11400000, guid: 064e7b511ad89c7469739ccf8f088cfd, type: 2}
   minDistance:
-    StartValue: 0
+    StartValue: 1
     multipliers: []
   maxDistance:
-    StartValue: 10
+    StartValue: 1
     multipliers: []
-  damageType: 1
+  damageType: -1000
   changes:
   - statToChange: 101
     resistanceType: -1000

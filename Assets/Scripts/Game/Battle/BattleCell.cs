@@ -23,8 +23,12 @@ namespace MyGame
         [SerializeField] private Vector2Int position;
         public Vector2Int Position { get => position; set => position = value; }
 
-        private CellHighlightState state;
+        private CellHighlightState state = CellHighlightState.None;
+        private CellHighlightState subState = CellHighlightState.None;
+
         public CellHighlightState State { get => state; }
+        public CellHighlightState SubState { get => subState; }
+
 
         private bool selected = false;
         public bool Selected { get => selected; }
@@ -50,11 +54,20 @@ namespace MyGame
             }
         }
 
-        public void ChangeState(CellHighlightState cellState)
+        public void ChangeState(CellHighlightState cellState, bool isSubState = false)
         {
-            state = cellState;
+            if (isSubState)
+            {
+                subState = cellState;
+            }
+            else
+            {
+                Debug.LogWarning($"Update state : {cellState}");
+                state = cellState;
+                subState = CellHighlightState.None;
+            }
 
-            view.UpdateUI();
+            view.UpdateStates();
         }
 
         public void Select(bool select)

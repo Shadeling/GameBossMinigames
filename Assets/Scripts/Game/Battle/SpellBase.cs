@@ -94,7 +94,7 @@ namespace MyGame
         {
             this.caster = caster;
 
-            currentCooldown = Mathf.CeilToInt(FindFinalStatChange(cooldown));
+            currentCooldown = Mathf.CeilToInt(FindFinalStatChange(cooldown, caster));
 
             if (type == SpellType.SelfBuff)
             {
@@ -102,36 +102,27 @@ namespace MyGame
             }
         }
 
-        public virtual void OnTargetAlly(List<IUnit> targets)
+        public virtual void OnTargetAlly(IUnit target)
         {
             if(type == SpellType.AllyBuffZone || type == SpellType.EffectOnAll)
             {
-                foreach (var unit in targets)
-                {
-                    ApplySpellEffectToUnit(unit);
-                }
+                ApplySpellEffectToUnit(target);
             }
         }
 
-        public virtual void OnTargetEnemy(List<IUnit> targets)
+        public virtual void OnTargetEnemy(IUnit target)
         {
             if (type == SpellType.EnemyEffectZone || type == SpellType.EffectOnAll)
             {
-                foreach (var unit in targets)
-                {
-                    ApplySpellEffectToUnit(unit);
-                }
+                ApplySpellEffectToUnit(target);
             }
         }
 
-        public virtual void OnTargetTiles(List<IBattleCell> tiles)
+        public virtual void OnTargetTiles(IBattleCell tile)
         {
             if(switchTilesTo != CellType.None)
             {
-                foreach(var cell in tiles)
-                {
-                    cell.CellType = switchTilesTo;
-                }
+                tile.CellType = switchTilesTo;
             }
         }
 
@@ -144,7 +135,7 @@ namespace MyGame
         {
             foreach(var statChange in changes)
             {
-                int finalChange = FindFinalStatChange(statChange.change);
+                int finalChange = FindFinalStatChange(statChange.change, caster);
 
                 unit.ChangeStats(statChange.statToChange, finalChange, damageType);
             }
@@ -156,15 +147,15 @@ namespace MyGame
 
         }
 
-        protected int FindFinalStatChange(SpellStatWithMultiplier spellStat)
+        public static int FindFinalStatChange(SpellStatWithMultiplier spellStat, IUnit unit)
         {
             float finalValue = spellStat.StartValue;
 
-            if(caster != null)
+            if(unit != null)
             {
                 foreach (var multiplier in spellStat.multipliers)
                 {
-                    finalValue += multiplier.value * caster.GetStat(multiplier.stat);
+                    finalValue += multiplier.value * unit.GetStat(multiplier.stat);
                 }
             }
 

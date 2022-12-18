@@ -36,7 +36,9 @@ namespace MyGame
 
         private void Awake()
         {
-            if(cellList.Count == 0)
+            Clear();
+
+            if (cellList.Count == 0)
             {
                 CreateGrid();
             }

@@ -4,6 +4,10 @@ using UnityEngine;
 using MyGame.Utils;
 using Zenject;
 using MyGame.UI;
+using System.Numerics;
+using System;
+using System.Linq;
+
 
 namespace MyGame
 {
@@ -14,11 +18,16 @@ namespace MyGame
 
         [SerializeField] UnitTemplate unitTemplate;
 
+        private CurrentState currentState { get { return State.StateValue.CurrentValue; } }
+
+        private ISpell currentSpell { get { return State.SelectedSpellValue.CurrentValue; } }
+
 
 
         private Dictionary<Vector2Int, BattleCell> CellsGrid = new Dictionary<Vector2Int, BattleCell>();
 
-        private List<IUnit> activeUnits = new List<IUnit>();
+        private List<IUnit> unitsInGame = new List<IUnit>();
+        private int currentUnitNum;
 
         private BattleCell selectedCell;
         private BattleCell SelectedCell {
@@ -68,11 +77,41 @@ namespace MyGame
 
 
             UnitBase baseUnit = new UnitBase(unitTemplate); 
-            activeUnits.Add(baseUnit);
+            unitsInGame.Add(baseUnit);
 
-            var r = Random.Range(0, newCells.Count);
+            var r = UnityEngine.Random.Range(0, newCells.Count);
             Vector2Int newPos = newCells[r].Position;
             CellsGrid[newPos].AddUnit(baseUnit);
+
+            currentUnitNum = unitsInGame.Count;
+        }
+
+        private void GameTurnsLoop()
+        {
+            EndGameCheck();
+
+            if (currentUnitNum >= unitsInGame.Count)
+            {
+                unitsInGame.RemoveAll(x => !x.IsAlive);
+                foreach (var unit in unitsInGame)
+                {
+                    unit.OnTurnEnd();
+                }
+                unitsInGame.OrderByDescending(x => x.GetStat(UnitStat.Agility));
+                currentUnitNum = 0;
+            }
+
+            unitsInGame[currentUnitNum].MyTurn = true;
+            if (!unitsInGame[currentUnitNum].ControlledByPlayer)
+            {
+                //Call bot logic
+            }
+            currentUnitNum++;
+        }
+
+        private void EndGameCheck()
+        {
+
         }
 
 
@@ -82,14 +121,66 @@ namespace MyGame
             BattleCell battleCell = selectable as BattleCell;
             if (battleCell)
             {
-                SelectedCell = battleCell;
+                switch (currentState)
+                {
+                    case CurrentState.SpellSelected:
+                        if(currentSpell != null && battleCell.State == CellHighlightState.RangeHighlight)
+                        {
+                            currentSpell.OnCast(selectedCell.MyUnit);
+                            ApplyOnZoneWithRotation(battleCell, currentSpell.Zone, (pos) => ApplySpellEffect(pos, selectedCell.MyUnit, currentSpell));
+                            ClearHighlight();
+                        }
+                        else
+                        {
+                            OnCellSelected(battleCell);
+                        }
+                        break;
 
-                DrawMoveColors();
-                //Draw area, update UI
+                    default:
+                        OnCellSelected(battleCell);
+                        break;
+                }
             }
             else
             {
                 SelectedCell = null;
+            }
+        }
+
+        private void OnCellSelected(BattleCell cell)
+        {
+            SelectedCell = cell;
+            DrawMoveColors();
+        }
+
+        private void ApplySpellEffect(Vector2Int cellPos, IUnit caster, ISpell spell)
+        {
+            if (caster == null || spell == null)
+                return;
+
+            if(CellsGrid.TryGetValue(cellPos, out var cell))
+            {
+                if (cell.HasUnit)
+                {
+                    if (cell.MyUnit.ControlledByPlayer == caster.ControlledByPlayer)
+                    {
+                        spell.OnTargetAlly(cell.MyUnit);
+                    }
+                    else
+                    {
+                        spell.OnTargetEnemy(cell.MyUnit);
+                    }
+                }
+                spell.OnTargetTiles(cell);
+            }
+
+        }
+
+        private void ChangeState(Vector2Int position, CellHighlightState cellState, bool isSubstate = false)
+        {
+            if (CellsGrid.TryGetValue(position, out var battleCell))
+            {
+                battleCell.ChangeState(cellState, isSubstate);
             }
         }
 
@@ -98,7 +189,7 @@ namespace MyGame
             BattleCell clickedCell = selectable as BattleCell;
             if (clickedCell)
             {
-                switch (State.StateValue.CurrentValue)
+                switch (currentState)
                 {
 
                     case CurrentState.CellWithUnitSelected:
@@ -124,41 +215,26 @@ namespace MyGame
 
         private void OnCellWithSpellHover(ISelectable selectable)
         {
+
             BattleCell cell = selectable as BattleCell;
-            var spell = State.SelectedSpellValue.CurrentValue;
-            if (cell && spell != null)
+            var spell = currentSpell;
+            ClearHighlight(CellHighlightState.SpellZoneHighlight, true);
+            if (cell && spell != null && cell.State == CellHighlightState.RangeHighlight)
             {
-                Debug.LogWarning($"Hover on cell x={cell.Position.x}, y={cell.Position.y}");
-                ClearHighlight(CellHighlightState.SpellZoneHighlight);
-                ApplyOnZone(cell, spell.Zone, CellHighlightState.SpellZoneHighlight);
+                ApplyOnZoneWithRotation(cell, spell.Zone, (pos) => { ChangeState(pos, CellHighlightState.SpellZoneHighlight, true); });
             }
         }
 
         private void OnSpellSelect(ISpell spell)
         {
             ClearHighlight();
+
             if (spell != null)
             {
+                int minRange = SpellBase.FindFinalStatChange(spell.MinDistance, selectedCell.MyUnit);
+                int maxRange = SpellBase.FindFinalStatChange(spell.MaxDistance, selectedCell.MyUnit);
+                ApplyInAllDirections(selectedCell, minRange, maxRange, (pos) => { ChangeState(pos, CellHighlightState.RangeHighlight); });
                 State.StateValue.SetValue(CurrentState.SpellSelected);
-            }
-        }
-
-        public void ClearHighlight(CellHighlightState state = CellHighlightState.None)
-        {
-            if(state == CellHighlightState.None)
-            {
-                foreach (var cell in CellsGrid.Values)
-                {
-                    cell.ChangeState(CellHighlightState.None);
-                }
-            }
-            else
-            {
-                foreach (var cell in CellsGrid.Values)
-                {
-                    if(cell.State == state)
-                        cell.ChangeState(CellHighlightState.None);
-                }
             }
         }
 
@@ -186,23 +262,45 @@ namespace MyGame
             return DistanceBetween(first, second) <= movePoints;
         }
 
+        #region ApplyStates
 
-        public void ApplyInFullRadius(BattleCell target, int radius, CellHighlightState cellState)
+        public delegate void CellAction(Vector2Int position);
+
+        public void ClearHighlight(CellHighlightState state = CellHighlightState.None, bool substate = false)
         {
-                for(int x = target.Position.x - radius; x <= target.Position.x + radius; x++)
+            if (state == CellHighlightState.None)
+            {
+                foreach (var cell in CellsGrid.Values)
                 {
-                    for (int y = target.Position.y - radius; y <= target.Position.y + radius; y++)
-                    {
-                        if(CellsGrid.TryGetValue(new Vector2Int(x, y), out var battleCell))
-                        {
-                            battleCell.ChangeState(cellState);
-                        }
-                    }
+                    cell.ChangeState(CellHighlightState.None);
                 }
+            }
+            else
+            {
+                foreach (var cell in CellsGrid.Values)
+                {
+                    if (cell.State == state || (substate && cell.SubState == state))
+                        cell.ChangeState(CellHighlightState.None, substate);
+                }
+            }
         }
 
-        public void ApplyInMoveRadius(BattleCell target, int radius, CellHighlightState cellState)
+        public void ApplyInFullRadius(BattleCell target, int radius, CellAction action)
         {
+            Vector2Int offset = new Vector2Int();
+            for (int x = target.Position.x - radius; x <= target.Position.x + radius; x++)
+            {
+                for (int y = target.Position.y - radius; y <= target.Position.y + radius; y++)
+                {
+                    offset.Set(x, y);
+                    action?.Invoke(offset);
+                }
+            }
+        }
+
+        public void ApplyInMoveRadius(BattleCell target, int radius, CellHighlightState cellState, bool isSubstate = false)
+        {
+
             for (int x = target.Position.x - radius; x <= target.Position.x + radius; x++)
             {
                 for (int y = target.Position.y - radius; y <= target.Position.y + radius; y++)
@@ -210,13 +308,13 @@ namespace MyGame
                     if (CellsGrid.TryGetValue(new Vector2Int(x, y), out var battleCell))
                     {
                         if(CanReach(target, battleCell, radius))
-                            battleCell.ChangeState(cellState);
+                            battleCell.ChangeState(cellState, isSubstate);
                     }
                 }
             }
         }
 
-        public void ApplyOnZone(BattleCell target, ZoneSO zone, CellHighlightState cellState)
+        public void ApplyOnZone(BattleCell target, ZoneSO zone, CellAction action)
         {
             Vector2Int offset = new Vector2Int();
             for(int x =0; x<zone.sizeX; x++)
@@ -227,43 +325,69 @@ namespace MyGame
                         continue;
 
                     offset.Set(target.Position.x + zone.startPoint.x - x, target.Position.y + zone.startPoint.y - y);
-                    if (CellsGrid.TryGetValue(offset, out var battleCell))
-                    {
-                        battleCell.ChangeState(cellState);
-                    }
+                    action?.Invoke(offset);
                 }
             }
         }
+
+
+        public void ApplyOnZoneWithRotation(BattleCell target, ZoneSO zone, CellAction action)
+        {
+            Vector2Int direction = selectedCell.Position - target.Position;
+            var rotationAngle = direction.x == 0 ? 0 : direction.x > 0 ? 270 : 90;
+            rotationAngle += direction.y <= 0 ?  0 : 180;
+            var rot = Matrix3x2.CreateRotation(-rotationAngle * (float)(Math.PI / 180f));
+
+            Vector2Int offset = new Vector2Int();
+            for (int x = 0; x < zone.sizeX; x++)
+            {
+                for (int y = 0; y < zone.sizeY; y++)
+                {
+                    if (!zone.fieldStateLinear[x + y * zone.sizeX])
+                        continue;
+
+                    var vector = new System.Numerics.Vector2(zone.startPoint.x - x, zone.startPoint.y - y);
+                    var vectorRotated = System.Numerics.Vector2.Transform(vector, rot);
+
+                    offset.Set(target.Position.x + (int)vectorRotated.X, target.Position.y + (int)vectorRotated.Y);
+                    action?.Invoke(offset);
+                }
+            }
+        }
+
+        public void ApplyInAllDirections(BattleCell target, int minRange, int maxRange, CellAction action)
+        {
+            Vector2Int offset = new Vector2Int();
+            for (int x = target.Position.x - maxRange; x <= target.Position.x + maxRange; x++)
+            {
+                offset.Set(x, target.Position.y);
+                int delta = Mathf.Abs(target.Position.x - x);
+                if (delta >= minRange)
+                {
+                    action?.Invoke(offset);
+                }
+            }
+
+            for (int y = target.Position.y - maxRange; y <= target.Position.y + maxRange; y++)
+            {
+                offset.Set(target.Position.x, y);
+                int delta = Mathf.Abs(target.Position.y - y);
+                if (delta >= minRange)
+                {
+                    action?.Invoke(offset);
+                }
+            }
+        }
+        #endregion
 
         /*public void PSYEventHandler(PSYEvent e, PSYParams param)
         {
             switch (e)
             {
-                case PSYEvent.SpellTargetCellSelected:
-                    var cell = param.Get<BattleCell>();
-                    if(cell != null && selectedSpell!=null)
-                    {
-                        Debug.LogWarning($"Hover on cell x={cell.Position.x}, y={cell.Position.y}");
-                        ClearHighlight(CellHighlightState.SpellZoneHighlight);
-                        ApplyOnZone(cell, selectedSpell.Zone, CellHighlightState.SpellZoneHighlight);
-                    }
-                    break;
-
-                case PSYEvent.SpellClicked:
-                    ClearHighlight();
-                    selectedSpell = param.Get<ISpell>();
-                    if(selectedSpell != null)
-                    {
-                        State.StateValue.SetValue(CurrentState.SelectSpell);
-                    }
-                    break;
+                
             }
         }*/
 
-        private void OnDestroy()
-        {
-            //MainUIManager.RemoveSubscriber(this);
-        }
     }
 
 }

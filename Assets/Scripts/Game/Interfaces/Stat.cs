@@ -5,7 +5,7 @@ namespace MyGame
 
     public enum UnitStat
     {
-        MaxHP = 1,
+        HP = 1,
 
         Strength = 3,       //Способности и здоровье
         Agility = 4,        //Способности и очередность хода

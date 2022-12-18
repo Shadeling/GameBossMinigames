@@ -8,16 +8,22 @@ namespace MyGame {
 
     public class BattleCellView : MonoBehaviour
     {
-        [SerializeField] Image highlightImage;
+        [SerializeField] private BattleCell cell;
 
         [SerializeField] Image selectedFrame;
+        [SerializeField] Image locationImage;
+
+        [Space(15), SerializeField] Image stateGraphics;
+        [SerializeField] Image subStateGraphics;
+
+        [Space(15), Header("UnitData"), SerializeField]
+        RectTransform unitRoot;
 
         [SerializeField] Image unitImage;
 
-        [SerializeField] SpriteRenderer locationImage;
+        [SerializeField] Text UnitHP;
 
-        [SerializeField] private BattleCell cell;
-
+        
 
         private void OnValidate()
         {
@@ -34,18 +40,24 @@ namespace MyGame {
             else
                 selectedFrame.color = selectedFrame.color.SetAlpha(0);
 
-
-            highlightImage.color = CellData.GetStateColor(cell.State);
-
             // Unit UI
             if (cell.HasUnit)
             {
+                unitRoot.gameObject.SetActive(true);
                 unitImage.color = Color.cyan;
+                UnitHP.text = cell.MyUnit.GetStat(UnitStat.HP).ToString();
             }
             else
             {
-                unitImage.color = Color.clear;
+                unitRoot.gameObject.SetActive(false);
             }
+        }
+
+        public void UpdateStates()
+        {
+            stateGraphics.color = CellData.GetStateColor(cell.State);
+
+            subStateGraphics.color = CellData.GetStateColor(cell.SubState);
         }
     }
 

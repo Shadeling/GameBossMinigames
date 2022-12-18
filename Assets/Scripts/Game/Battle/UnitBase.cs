@@ -17,6 +17,8 @@ namespace MyGame
 
         private bool controlledByPlayer;
 
+        private bool myTurn;
+
         private List<BaseEquipment> equipment;
 
         private UnitClass unitClass;
@@ -49,6 +51,8 @@ namespace MyGame
 
         public bool IsAlive => HP.Minimum;
 
+        public bool MyTurn { get => myTurn; set => myTurn = value; }
+
         #endregion
 
         private Clamper HP;
@@ -79,7 +83,7 @@ namespace MyGame
             {
                 TakeHit(value, damageType);
             }
-            else if (stat == UnitStat.MaxHP)
+            else if (stat == UnitStat.HP)
             {
                 HP = HP.AddToMax(value);
             }
@@ -106,7 +110,7 @@ namespace MyGame
             statsDict.Clear();
             foreach(var baseStat in template.stats)
             {
-                if (baseStat.stat == UnitStat.MaxHP)
+                if (baseStat.stat == UnitStat.HP)
                 {
                     HP = new Clamper(baseStat.value);
                 }
@@ -193,7 +197,7 @@ namespace MyGame
 
         public float GetStat(UnitStat stat)
         {
-            if (stat != UnitStat.MaxHP)
+            if (stat != UnitStat.HP)
             {
                 if (statsDict.ContainsKey(stat))
                 {

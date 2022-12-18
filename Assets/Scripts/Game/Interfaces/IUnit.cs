@@ -20,6 +20,8 @@ namespace MyGame
     { 
         public bool IsAlive { get; }
 
+        public bool MyTurn { get; set; }
+
         public abstract void OnTurnEnd();
         public abstract bool EquipItem(BaseEquipment item);
         public abstract bool RemoveItem(BaseEquipment item);

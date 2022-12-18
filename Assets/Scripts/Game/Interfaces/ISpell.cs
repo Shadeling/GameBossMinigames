@@ -37,11 +37,11 @@ namespace MyGame
 
         public abstract void OnTurnEnd();
         public abstract void OnCast(IUnit caster);
-        public abstract void OnTargetAlly(List<IUnit> targets);
+        public abstract void OnTargetAlly(IUnit target);
 
-        public abstract void OnTargetEnemy(List<IUnit> targets);
+        public abstract void OnTargetEnemy(IUnit target);
 
-        public abstract void OnTargetTiles(List<IBattleCell> tiles);
+        public abstract void OnTargetTiles(IBattleCell tile);
     }
 
 

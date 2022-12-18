@@ -18,7 +18,7 @@ MonoBehaviour:
   controlledByPlayer: 1
   unitClass: 1
   baseSpells:
-  - {fileID: 11400000, guid: dd53b876201aa6c4b91e03b781a0c0db, type: 2}
+  - {fileID: 11400000, guid: a2a1fb4d39c147342beb68a90c85811f, type: 2}
   basePassives: []
   startEquipment: []
   stats:
